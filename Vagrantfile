@@ -10,8 +10,8 @@ Vagrant.configure(2) do |config|
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
-  config.vm.define "vagrant-whosonfirst-www-boundaryissues"
-  config.vm.hostname = "boundaryissues.whosonfirst"
+  config.vm.define "vagrant-whosonfirst-www-spelunker"
+  config.vm.hostname = "spelunker.whosonfirst"
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
@@ -75,7 +75,7 @@ Vagrant.configure(2) do |config|
   config.vm.provision "shell", inline: <<-SHELL
 sudo apt-get update
 sudo apt-get upgrade -y
-sudo apt-get install -y git tcsh emacs24-nox htop sysstat ufw fail2ban unattended-upgrades python-setuptools unzip
+sudo apt-get install -y git tcsh emacs24-nox htop sysstat ufw fail2ban unattended-upgrades python-dev python-setuptools unzip
 sudo apt-get install -y gdal-bin
 sudo apt-get install -y golang
 sudo apt-get install -y make nginx gunicorn python-gevent python-flask
@@ -138,7 +138,7 @@ fi
 # make sure elasticsearch is running
 
 if [ -f /var/run/elasticsearch/elasticsearch.pid ]
-then 
+then
      sudo /etc/init.d/elasticsearch start
      sleep 10
 else
@@ -181,7 +181,7 @@ fi
 # Setting up things from github:whosonfirst - see what's going on? basically configuring
 # vagrant to do the right thing with ssh keys and stuff like github during the
 # provisioning phase is a gigantic nuisance. So, we're just going to fake it for
-# now and assume that it is possible to do all the usual GH stuff once you've 
+# now and assume that it is possible to do all the usual GH stuff once you've
 # logged in... (20151008/thisisaaronland)
 
 if [ ! -d /usr/local/mapzen/py-mapzen-whosonfirst-bundle ]
@@ -200,7 +200,7 @@ else
 	cd /usr/local/mapzen/py-mapzen-whosonfirst-bundle
 	sudo python ./setup.py install
 	cd -
-fi 
+fi
 
 if [ ! -d /usr/local/mapzen/whosonfirst-www-spelunker ]
 then
@@ -220,7 +220,7 @@ fi
 
 # DO STUFF HERE
 
-cd -	
+cd -
 
   SHELL
 end
