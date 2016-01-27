@@ -76,131 +76,6 @@ Vagrant.configure(2) do |config|
 sudo apt-get update
 sudo apt-get upgrade -y
 sudo apt-get install -y git tcsh emacs24-nox htop sysstat ufw fail2ban unattended-upgrades python-dev python-setuptools unzip
-sudo apt-get install -y gdal-bin
-sudo apt-get install -y golang
-sudo apt-get install -y make nginx gunicorn python-gevent python-flask
-sudo apt-get install -y postgresql-9.3 postgresql-client postgis postgresql-9.3-postgis-scripts python-psycopg2
-sudo apt-get install -y ruby-ronn
-
-# https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-service.html
-
-sudo add-apt-repository ppa:webupd8team/java -y
-sudo apt-get install oracle-java8-installer -y
-
-# https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-repositories.html
-
-wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-echo "deb http://packages.elastic.co/elasticsearch/1.7/debian stable main" | sudo tee -a /etc/apt/sources.list.d/elasticsearch-1.7.list
-sudo apt-get update && sudo apt-get install elasticsearch
-sudo update-rc.d elasticsearch defaults 95 10
-
-# make sure postgres is set up incorrectly
-
-echo "MAKING POSTGRES DESPERATELY INSECURE ON LOCALHOST"
-sudo cp /etc/postgresql/9.3/main/pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf.bak
-sudo perl -p -i -e 's/local\s+all\s+postgres\s+peer/local\tall\tpostgres\ttrust/' /etc/postgresql/9.3/main/pg_hba.conf
-
-# see also:
-# https://github.com/whosonfirst/whosonfirst-www-boundaryissues/blob/master/ubuntu/setup-postgres.sh
-
-if sudo -u postgres psql -lqt | cut -d '|' -f 1 | grep -w whosonfirst; then
-    echo "whosonfirst database already exists"
-else
-    sudo -u postgres createdb whosonfirst
-    sudo -u postgres psql -d whosonfirst -c "CREATE EXTENSION postgis;"
-    sudo -u postgres psql -d whosonfirst -c "CREATE EXTENSION postgis_topology;"
-    sudo -u postgres psql -d whosonfirst -c "CREATE TABLE whosonfirst (id BIGINT PRIMARY KEY, parent_id BIGINT, placetype VARCHAR, properties TEXT, geom GEOGRAPHY(MULTIPOLYGON, 4326), centroid GEOGRAPHY(POINT, 4326));"
-    sudo -u postgres psql -d whosonfirst -c "CREATE INDEX by_geom ON whosonfirst USING GIST(geom);"
-    sudo -u postgres psql -d whosonfirst -c "CREATE INDEX by_placetype ON whosonfirst (placetype);"
-    sudo -u postgres psql -d whosonfirst -c "VACUUM ANALYZE;"
-fi
-
-# make sure there is a config file for whosonfirst stuff
-
-if [ -f /usr/local/mapzen/whosonfirst.cfg ]
-then
-   echo "whosonfirst config already exists"
-else
-   touch /usr/local/mapzen/whosonfirst.cfg
-   chown vagrant.vagrant /usr/local/mapzen/whosonfirst.cfg
-   chmod 600 /usr/local/mapzen/whosonfirst.cfg
-   echo "[spatial]" >> /usr/local/mapzen/whosonfirst.cfg
-   echo "db_user=postgres" >> /usr/local/mapzen/whosonfirst.cfg
-   echo "db_pswd=" >> /usr/local/mapzen/whosonfirst.cfg
-   echo "db_host=localhost" >> /usr/local/mapzen/whosonfirst.cfg
-   echo "db_name=whosonfirst" >> /usr/local/mapzen/whosonfirst.cfg
-   echo "" >> /usr/local/mapzen/whosonfirst.cfg
-   echo "[search]" >> /usr/local/mapzen/whosonfirst.cfg
-   echo "host=localhost" >> /usr/local/mapzen/whosonfirst.cfg
-   echo "port=9200" >> /usr/local/mapzen/whosonfirst.cfg
-fi
-
-# make sure elasticsearch is running
-
-if [ -f /var/run/elasticsearch/elasticsearch.pid ]
-then
-     sudo /etc/init.d/elasticsearch start
-     sleep 10
-else
-
-	# make sure elasticsearch is actually running...
-	PID=`cat /var/run/elasticsearch/elasticsearch.pid`
-	# ps -p ${PID}
-fi
-
-# setup nginx stuff (maybe)
-# sudo ln -s /usr/local/mapzen/whosonfirst-www-spelunker/nginx/whosonfirst-www-spelunker.conf /etc/nginx/sites-enabled/
-
-# mapzen/whosonfirst stuff
-
-if [ ! -d /usr/local/mapzen ]
-then
-    sudo mkdir /usr/local/mapzen
-fi
-
-sudo chown vagrant /usr/local/mapzen
-
-if [ ! -d /usr/local/mapzen/lockedbox ]
-then
-    sudo mkdir /usr/local/mapzen/lockedbox
-    sudo chown root /usr/local/mapzen/lockedbox
-    sudo chmod 700 /usr/local/mapzen/lockedbox
-fi
-
-if [ ! -d /usr/local/mapzen/certified ]
-then
-    git clone https://github.com/rcrowley/certified.git /usr/local/mapzen/certified
-    cd /usr/local/mapzen/certified
-    sudo make install
-    cd -
-fi
-
-# index all the data - this takes a while
-# /usr/local/bin/wof-es-index -s /usr/local/mapzen/whosonfirst-data/data -b -v
-
-# Setting up things from github:whosonfirst - see what's going on? basically configuring
-# vagrant to do the right thing with ssh keys and stuff like github during the
-# provisioning phase is a gigantic nuisance. So, we're just going to fake it for
-# now and assume that it is possible to do all the usual GH stuff once you've
-# logged in... (20151008/thisisaaronland)
-
-if [ ! -d /usr/local/mapzen/py-mapzen-whosonfirst-bundle ]
-then
-
-	git clone https://github.com/whosonfirst/py-mapzen-whosonfirst-bundle.git /usr/local/mapzen/py-mapzen-whosonfirst-bundle
-	sudo chown -R vagrant.vagrant /usr/local/mapzen/py-mapzen-whosonfirst-bundle
-
-	cd /usr/local/mapzen/py-mapzen-whosonfirst-bundle
-	git remote rm origin
-	git remote add origin git@github.com:whosonfirst/py-mapzen-whosonfirst-bundle.git
-
-	sudo python ./setup.py install
-	cd -
-else
-	cd /usr/local/mapzen/py-mapzen-whosonfirst-bundle
-	sudo python ./setup.py install
-	cd -
-fi
 
 if [ ! -d /usr/local/mapzen/whosonfirst-www-spelunker ]
 then
@@ -208,17 +83,12 @@ then
 	git clone https://github.com/whosonfirst/whosonfirst-www-spelunker.git /usr/local/mapzen/whosonfirst-www-spelunker
 
 	sudo chown -R vagrant.vagrant /usr/local/mapzen/whosonfirst-www-spelunker
-	cd /usr/local/mapzen/whosonfirst-www-spelunker
-	git remote rm origin
-	git remote add origin git@github.com:whosonfirst/whosonfirst-www-spelunker.git
-else
-	cd /usr/local/mapzen/whosonfirst-www-spelunker
-
-	# See above
-	# git pull origin master
 fi
 
-# DO STUFF HERE
+cd /usr/local/mapzen/whosonfirst-www-spelunker
+git pull origin master
+
+/usr/local/mapzen/whosonfirst-www-spelunker/ubuntu/setup.sh
 
 cd -
 
