@@ -77,20 +77,21 @@ sudo apt-get update
 sudo apt-get upgrade -y
 sudo apt-get install -y git tcsh emacs24-nox htop sysstat ufw fail2ban unattended-upgrades python-dev python-setuptools unzip
 
+if [ ! -d /usr/local/mapzen/ ]
+then
+	sudo mkdir /usr/local/mapzen/
+	sudo chown -R vagrant.vagrant /usr/local/mapzen/
+fi
+
 if [ ! -d /usr/local/mapzen/whosonfirst-www-spelunker ]
 then
 	# git clone git@github.com:whosonfirst/whosonfirst-www-spelunker.git /usr/local/mapzen/whosonfirst-www-spelunker
 	git clone https://github.com/whosonfirst/whosonfirst-www-spelunker.git /usr/local/mapzen/whosonfirst-www-spelunker
 
-	sudo chown -R vagrant.vagrant /usr/local/mapzen/whosonfirst-www-spelunker
+	cd /usr/local/mapzen/whosonfirst-www-spelunker
+	make setup
+	cd -
 fi
-
-cd /usr/local/mapzen/whosonfirst-www-spelunker
-git pull origin master
-
-/usr/local/mapzen/whosonfirst-www-spelunker/ubuntu/setup.sh
-
-cd -
 
   SHELL
 end
