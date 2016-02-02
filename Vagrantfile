@@ -28,7 +28,6 @@ Vagrant.configure(2) do |config|
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
-  config.vm.network "forwarded_port", guest: 80, host: 8993
   config.vm.network "forwarded_port", guest: 443, host: 8994
 
   # Create a private network, which allows host-only access to the machine
@@ -88,9 +87,12 @@ then
 	# git clone git@github.com:whosonfirst/whosonfirst-www-spelunker.git /usr/local/mapzen/whosonfirst-www-spelunker
 	git clone https://github.com/whosonfirst/whosonfirst-www-spelunker.git /usr/local/mapzen/whosonfirst-www-spelunker
 
-	cd /usr/local/mapzen/whosonfirst-www-spelunker
-	make setup
-	cd -
+	# PLEASE TO MAKE INTERACTIVE AND STUFF... (like allowing users to agree to the Oracle Java license)
+	# (20160201/thisisaaronland)
+
+	# cd /usr/local/mapzen/whosonfirst-www-spelunker
+	# make setup
+	# cd -
 fi
 
   SHELL
