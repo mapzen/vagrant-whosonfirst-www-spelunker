@@ -1,3 +1,6 @@
+setup:
+	if ! test -f Vagrantfile; then cp Vagrantfile.example Vagrantfile; fi
+
 start:
 	vagrant up
 	vagrant ssh
