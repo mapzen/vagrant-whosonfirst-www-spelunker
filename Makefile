@@ -1,5 +1,13 @@
+build: setup up go
+
 setup:
 	if ! test -f Vagrantfile; then cp Vagrantfile.example Vagrantfile; fi
+
+up:
+	vagrant up
+
+go:
+	vagrant ssh
 
 start:
 	vagrant up
@@ -7,9 +15,6 @@ start:
 
 stop:
 	vagrant halt
-
-go:
-	vagrant ssh
 
 rebuild:
 	vagrant up --provision
