@@ -15,7 +15,7 @@ make build
 
 This is just a helper target to setup the default `Vagrant` file, spin the box up, clone [whosonfirst-www-spelunker](https://github.com/whosonfirst/whosonfirst-www-spelunker) package and then log in to the new virtual machine.
 
-Once that's done you'll need to type some more things. This isn't ideal but the reality is that in order to complete the setup process you still need to type some things by hand. These include agreeing to the Java Oracle license and entering a master password for creating a self-contained certificate authority (CA). The Java thing might go away and the CA thing is possibly overkill for a self-hosted application running on your laptop. But that's the way it is _today_ so you'll need to do the following after you've logged in:
+Once that's done you'll need to type some more things. This isn't ideal but the reality is that in order to complete the setup process you still need to type some things by hand. These include agreeing to the Java Oracle license and entering a master password for creating a self-contained certificate authority (CA). The Java thing [might go away](https://github.com/whosonfirst/whosonfirst-www-spelunker/issues/18) and the CA thing is possibly overkill for a self-hosted application running on your laptop. But that's the way it is _today_ so you'll need to do the following after you've logged in:
 
 ```
 cd /usr/local/mapzen/whosonfirst-www-spelunker
