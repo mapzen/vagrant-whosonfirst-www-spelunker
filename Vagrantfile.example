@@ -83,7 +83,8 @@ fi
 
 if [ ! -d /usr/local/mapzen/whosonfirst-www-spelunker ]
 then
-	git clone git@github.com:whosonfirst/whosonfirst-www-spelunker.git /usr/local/mapzen/whosonfirst-www-spelunker
+
+	git clone https://github.com/whosonfirst/whosonfirst-www-spelunker.git /usr/local/mapzen/whosonfirst-www-spelunker
 	sudo chown -R vagrant.vagrant /usr/local/mapzen/whosonfirst-www-spelunker
 
 	cd /usr/local/mapzen/whosonfirst-www-spelunker
