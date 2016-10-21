@@ -19,7 +19,7 @@ Once that's done you'll need to type some more things. This isn't ideal but the 
 
 ```
 cd /usr/local/mapzen/whosonfirst-www-spelunker
-make setup
+make setup-local
 ```
 
 This will trigger a whole bunch of scripts that will finish downloading and installing all the things you need to run the spelunker.
