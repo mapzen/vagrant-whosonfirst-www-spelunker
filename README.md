@@ -38,8 +38,8 @@ Once all the WOF data has been downloaded you will need to index it which you ca
 make index
 ```
 
-This might take a while depending on how many computrons your computer has for the job. Once it's complete though you should be able to point your web browser at `https://localhost:8984/` and see a working version of the spelunker!
- 
+This might take a while depending on how many computrons your computer has for the job. Once it's complete though you should be able to point your web browser at `https://localhost:8994/` and see a working version of the spelunker!
+
 Note that the default build scripts will create a self-signed TLS certificate so you should expect your browser to display a security warning.
 
 ## Alternate data sources
